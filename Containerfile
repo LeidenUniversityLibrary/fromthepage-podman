@@ -1,4 +1,4 @@
-FROM docker.io/phusion/passenger-ruby27
+FROM docker.io/phusion/passenger-ruby27:latest
 
 # Install the Ubuntu packages.
 # Install Ruby, RubyGems, Bundler, ImageMagick, MySQL and Git
@@ -15,9 +15,9 @@ RUN apt-get update && apt-get install -y imagemagick libmagickwand-dev \
 
 # Set the locale.
 RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 WORKDIR /home
 
 # Clone the repository
