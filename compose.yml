@@ -1,0 +1,34 @@
+# version: "3.8"
+services:
+  fromthepage:
+    # build:
+    #   dockerfile: Containerfile
+    #   context: .
+    image: ftp_podman
+    environment:
+    - DATABASE_ADAPTER=mysql
+    depends_on:
+    - "mysql"
+    ports:
+    - "3000:3000"
+    volumes:
+      - fromthepage_config:/home/fromthepage/config
+      - fromthepage_public:/home/fromthepage/public
+    restart: always
+
+  mysql:
+    image: mysql:5.7
+    platform: "linux/amd64"
+    environment:
+    - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    - MYSQL_USER=fromthepage
+    - MYSQL_PASSWORD=fromthepage
+    - MYSQL_DATABASE=diary_development
+    volumes:
+    - fromthepage_mysql_data:/var/lib/mysql
+    restart: always
+
+volumes:
+  fromthepage_mysql_data:
+  fromthepage_config:
+  fromthepage_public:
