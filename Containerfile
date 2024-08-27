@@ -48,7 +48,6 @@ WORKDIR /home/fromthepage
 # Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
 RUN sed -i -e 's/^ruby.*$//' Gemfile
 RUN bundle install
-# RUN service mysql restart; ruby --version && mysql -V && false
 
 # Configure MySQL
 
@@ -56,13 +55,10 @@ RUN bundle install
 # Run
 #    rake db:migrate
 # to load the schema definition into the database account.
-# RUN find /var/lib/mysql -type f -exec touch {} \; && service mysql restart; cd fromthepage; bundle exec rake db:create; bundle exec rake db:migrate
 
 # Finally, start the application
 
 EXPOSE 3000
-# ENV DATABASE_ADAPTER sqlite
 VOLUME /data
-# CMD find /var/lib/mysql -type f -exec touch {} \; && service mysql restart; cd fromthepage; bundle exec rails server
 COPY fromthepage.sh /home/fromthepage/fromthepage.sh
 CMD ./fromthepage.sh
