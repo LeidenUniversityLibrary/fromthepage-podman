@@ -26,6 +26,7 @@ services:
     - MYSQL_DATABASE=diary_development
     volumes:
     - fromthepage_mysql_data:/var/lib/mysql
+    - ./data:/docker-entrypoint-initdb.d
     restart: always
 
 volumes:
