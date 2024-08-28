@@ -26,6 +26,7 @@ ENV LC_ALL=en_US.UTF-8
 FROM ruby27
 ARG REPO=https://github.com/benwbrum/fromthepage.git
 ARG FTP_VERSION=development
+ARG BUNDLER_VERSION=2.4.22
 WORKDIR /home
 
 # Clone the repository
@@ -34,7 +35,7 @@ COPY database.yml /home/fromthepage/config/database.yml
 
 # Install required gems
 #    bundle install
-RUN gem install bundler -v 2.4.22
+RUN gem install bundler -v ${BUNDLER_VERSION}
 # RUN gem install nokogiri -v 1.15.5
 # RUN add-apt-repository ppa:rock-core/qt4
 # RUN apt update
