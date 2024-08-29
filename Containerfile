@@ -7,15 +7,18 @@ MAINTAINER Ben Companjen <ben@companjen.name>
 # Install qt4/qtwebkit libraries for capybara
 # Install build deps for gems installed by bundler
 # RUN add-apt-repository 'deb http://archive.ubuntu.com/ubuntu focal universe'
-RUN apt-get update && apt-get install -y imagemagick libmagickwand-dev \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    imagemagick libmagickwand-dev \
     git \
     graphviz tzdata \
-    build-essential && \
-    apt-get install -y \
+    build-essential \
+    nodejs && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       $(apt-get -s build-dep ruby-rmagick | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v 'ruby') && \
-    apt-get install -y \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       $(apt-get -s build-dep ruby-mysql2 | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v -e 'mysql-' -e 'ruby') && \
-    apt-get install -y nodejs
+    DEBIAN_FRONTEND=noninteractive apt clean
 
 # Set the locale.
 RUN locale-gen en_US.UTF-8
