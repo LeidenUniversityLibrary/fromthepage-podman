@@ -4,9 +4,12 @@ services:
     # build:
     #   dockerfile: Containerfile
     #   context: .
-    image: ftp_podman
+    image: docker.io/bencomp/fromthepage:production
+    platform: "linux/amd64"
     environment:
-    - DATABASE_ADAPTER=mysql
+    # - DATABASE_ADAPTER=mysql
+    # - DATABASE_URL="mysql2://fromthepage:fromthepage@mysql/diary_development"
+    - RAILS_ENV=development
     depends_on:
     - "mysql"
     ports:
