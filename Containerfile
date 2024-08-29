@@ -65,4 +65,4 @@ RUN bundle install
 EXPOSE 3000
 # VOLUME /data
 COPY fromthepage.sh /home/fromthepage/fromthepage.sh
-CMD ./fromthepage.sh
+CMD ["./fromthepage.sh"]
