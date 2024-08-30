@@ -5,7 +5,7 @@ on:
     types: [published]
   push:
     tags:
-      - 'v*'
+      - '*'
     branches:
       - 'actions*'
 
@@ -35,9 +35,11 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Containerfile  # Specify the name of the container file
+          file: Containerfile
           push: true
-          tags: docker.io/squedward/fromthepage:${{ github.ref_name }}
+          tags: |
+            docker.io/squedwards/fromthepage:latest
+            docker.io/squedwards/fromthepage:${{ github.ref_name }}
 
       - name: Log out from Docker Hub
         run: docker logout
