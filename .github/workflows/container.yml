@@ -35,6 +35,7 @@ jobs:
           context: .
           push: true
           tags: docker.io/squedward/fromthepage:latest
+          tags: docker.io/squedward/fromthepage:${{ github.ref_name }}
 
       - name: Log out from Docker Hub
         run: docker logout
