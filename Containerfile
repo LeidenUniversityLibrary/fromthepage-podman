@@ -34,7 +34,6 @@ WORKDIR /home
 
 # Clone the repository
 RUN git clone -b ${FTP_VERSION} --depth 1 $REPO fromthepage
-COPY database.yml /home/fromthepage/config/database.yml
 
 # Install required gems
 #    bundle install
@@ -67,5 +66,6 @@ RUN bundle install
 
 EXPOSE 3000
 # VOLUME /data
+COPY database.yml /home/fromthepage/config/database.yml
 COPY fromthepage.sh /home/fromthepage/fromthepage.sh
 CMD ["./fromthepage.sh"]
