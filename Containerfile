@@ -52,7 +52,8 @@ WORKDIR /home/fromthepage
 # Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
 RUN sed -i -e 's/^ruby.*$//' Gemfile
 ENV RAILS_ENV=production
-ENV BUNDLE_WITHOUT=development:test
+# All gems are loaded on application startup, so we need to install them all
+# ENV BUNDLE_WITHOUT=development:test
 RUN bundle install
 
 # Configure MySQL
