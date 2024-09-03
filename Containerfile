@@ -1,6 +1,6 @@
 ARG VARIANT=2.7
 FROM mcr.microsoft.com/devcontainers/ruby:${VARIANT} AS ruby27
-MAINTAINER Ben Companjen <ben@companjen.name>
+LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
 
 # Install the Ubuntu packages.
 # Install Ruby, RubyGems, Bundler, ImageMagick, MySQL and Git
