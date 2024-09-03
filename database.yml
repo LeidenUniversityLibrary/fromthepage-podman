@@ -15,7 +15,7 @@ default: &default
   pool: 5
   username: fromthepage
   password: fromthepage
-  host: mysql
+  host: <%= ENV['FTP_DATABASE_HOST'] %>
   strict: false
   variables:
     sql_mode: TRADITIONAL
@@ -52,6 +52,6 @@ test:
 #
 production:
   <<: *default
-  database: diary_production
-  username: diary
-  password: <%= ENV['DIARY_DATABASE_PASSWORD'] %>
+  database: <%= ENV['FTP_DATABASE'] %>
+  username: <%= ENV['FTP_DATABASE_USERNAME'] %>
+  password: <%= ENV['FTP_DATABASE_PASSWORD'] %>

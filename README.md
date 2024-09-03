@@ -22,6 +22,16 @@ For example, older versions of FromThePage may need an older version of Bundler.
 
 ## Running
 
+Because of the custom database.yml configuration file, FromThePage will read
+the database connection information from environment variables.
+In fromthepage.sh these variables are populated from Docker/Podman secrets.
+Add the database connection information to the files in `./secrets`:
+
+- `./secrets/db_host.txt`: MySQL hostname
+- `./secrets/db_name.txt`: MySQL database name
+- `./secrets/db_user.txt`: MySQL username
+- `./secrets/db_password.txt`: MySQL password
+
 If you want to migrate an existing installation, load a database dump into MySQL
 before starting the FromThePage container.
 See the section *Initializing a fresh instance* in the 

@@ -6,9 +6,12 @@ services:
     #   context: .
     image: docker.io/bencomp/fromthepage:production
     platform: "linux/amd64"
+    secrets:
+    - db_host
+    - db_name
+    - db_user
+    - db_password
     environment:
-    # - DATABASE_ADAPTER=mysql
-    # - DATABASE_URL="mysql2://fromthepage:fromthepage@mysql/diary_development"
     - RAILS_ENV=development
     depends_on:
     - "mysql"
@@ -24,9 +27,13 @@ services:
     platform: "linux/amd64"
     environment:
     - MYSQL_RANDOM_ROOT_PASSWORD=yes
-    - MYSQL_USER=fromthepage
-    - MYSQL_PASSWORD=fromthepage
-    - MYSQL_DATABASE=diary_development
+    - MYSQL_USER_FILE=/run/secrets/db_user
+    - MYSQL_PASSWORD_FILE=/run/secrets/db_password
+    - MYSQL_DATABASE_FILE=/run/secrets/db_name
+    secrets:
+    - db_name
+    - db_user
+    - db_password
     volumes:
     - fromthepage_mysql_data:/var/lib/mysql
     - ./data:/docker-entrypoint-initdb.d
@@ -36,3 +43,13 @@ volumes:
   fromthepage_mysql_data:
   fromthepage_config:
   fromthepage_public:
+
+secrets:
+  db_host:
+    file: ./secrets/db_host.txt
+  db_name:
+    file: ./secrets/db_name.txt
+  db_user:
+    file: ./secrets/db_user.txt
+  db_password:
+    file: ./secrets/db_password.txt
