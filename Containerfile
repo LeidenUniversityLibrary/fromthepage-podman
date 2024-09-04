@@ -53,7 +53,7 @@ RUN sed -i -e 's/^ruby.*$//' Gemfile
 ENV RAILS_ENV=production
 # All gems are loaded on application startup, so we need to install them all
 # ENV BUNDLE_WITHOUT=development:test
-RUN bundle install
+RUN bundle config --local set deployment 'true' && bundle install
 
 # Configure MySQL
 
