@@ -11,6 +11,13 @@ services:
     - db_name
     - db_user
     - db_password
+    - app_secret_key_base
+    - devise_secret_key
+    - devise_pepper
+    - devise_stretches
+    env_file:
+    - path: ./local.env
+      required: false
     environment:
     - RAILS_ENV=development
     depends_on:
@@ -53,3 +60,11 @@ secrets:
     file: ./secrets/db_user.txt
   db_password:
     file: ./secrets/db_password.txt
+  app_secret_key_base:
+    file: ./secrets/app_secret_key_base.txt
+  devise_secret_key:
+    file: ./secrets/devise_secret_key.txt
+  devise_pepper:
+    file: ./secrets/devise_pepper.txt
+  devise_stretches:
+    file: ./secrets/devise_stretches.txt
