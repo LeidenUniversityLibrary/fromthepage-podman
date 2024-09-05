@@ -1,5 +1,6 @@
 ARG VARIANT=2.7
-FROM mcr.microsoft.com/devcontainers/ruby:${VARIANT} AS ruby27
+FROM docker.io/phusion/passenger-ruby27 AS ruby27
+# FROM mcr.microsoft.com/devcontainers/ruby:${VARIANT} AS ruby27
 LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
 
 # Install the Ubuntu packages.
@@ -10,10 +11,8 @@ LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     imagemagick libmagickwand-dev \
-    git \
     graphviz tzdata \
-    build-essential \
-    nodejs && \
+    build-essential && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       $(apt-get -s build-dep ruby-rmagick | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v 'ruby') && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
