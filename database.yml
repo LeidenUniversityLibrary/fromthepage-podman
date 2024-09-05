@@ -14,8 +14,9 @@ default: &default
   encoding: utf8mb4
   collation: utf8mb4_unicode_ci
   pool: 5
-  username: fromthepage
-  password: fromthepage
+  database: <%= ENV['FTP_DATABASE'] %>
+  username: <%= ENV['FTP_DATABASE_USERNAME'] %>
+  password: <%= ENV['FTP_DATABASE_PASSWORD'] %>
   host: <%= ENV['FTP_DATABASE_HOST'] %>
   strict: false
   variables:
@@ -23,7 +24,7 @@ default: &default
 
 development:
   <<: *default
-  database: diary_development
+  # database: diary_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
