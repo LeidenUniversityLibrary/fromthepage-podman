@@ -26,15 +26,19 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
-FROM ruby27
+FROM busybox AS src
 ARG REPO=https://github.com/benwbrum/fromthepage.git
 ARG FTP_VERSION=development
-ARG BUNDLER_VERSION=2.4.22
-WORKDIR /home
 
 # Clone the repository
-RUN git clone -b ${FTP_VERSION} --depth 1 $REPO fromthepage
+ADD ${REPO}#${FTP_VERSION} /fromthepage
+RUN cd /fromthepage && rm -rf travis test_data spec
 
+FROM ruby27
+ARG BUNDLER_VERSION=2.4.22
+# WORKDIR /home
+WORKDIR /home/fromthepage
+COPY --from=src /fromthepage /home/fromthepage
 # Install required gems
 #    bundle install
 RUN gem install bundler -v ${BUNDLER_VERSION}
@@ -46,7 +50,6 @@ RUN gem install bundler -v ${BUNDLER_VERSION}
 # RUN apt-get install libqtwebkit-dev -y
 # RUN gem install capybara-webkit -v '1.15.1'
 # RUN cd fromthepage; bundle install; bundle add sqlite3 -v 1.6.9
-WORKDIR /home/fromthepage
 
 # Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
 RUN sed -i -e 's/^ruby.*$//' Gemfile
