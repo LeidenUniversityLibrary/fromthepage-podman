@@ -56,8 +56,9 @@ RUN sed -i -e 's/^ruby.*$//' Gemfile
 ENV RAILS_ENV=production
 # All gems are loaded on application startup, so we need to install them all
 # ENV BUNDLE_WITHOUT=development:test
-RUN bundle config --local set deployment 'true' && bundle install
-
+RUN bundle install
+# RUN bundle config set --local deployment 'true' && bundle install
+RUN bundle exec rake assets:precompile
 # Configure MySQL
 
 # Then update the config/database.yml file to point to the MySQL user account and database you created above.
