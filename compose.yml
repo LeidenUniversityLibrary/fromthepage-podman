@@ -27,7 +27,7 @@ services:
     volumes:
       - fromthepage_config:/home/fromthepage/config
       - fromthepage_public:/home/fromthepage/public
-    restart: always
+    # restart: always
 
   mysql:
     image: mysql:5.7
