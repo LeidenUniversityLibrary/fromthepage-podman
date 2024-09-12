@@ -31,7 +31,7 @@ ARG FTP_VERSION=development
 
 # Clone the repository
 ADD ${REPO}#${FTP_VERSION} /fromthepage
-RUN cd /fromthepage && rm -rf travis test_data spec
+RUN cd /fromthepage && rm -rf test_data spec
 
 FROM ruby27
 ARG BUNDLER_VERSION=2.4.22
