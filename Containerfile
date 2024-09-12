@@ -57,7 +57,7 @@ ENV RAILS_ENV=production
 # ENV BUNDLE_WITHOUT=development:test
 RUN bundle install
 # RUN bundle config set --local deployment 'true' && bundle install
-RUN bundle exec rake assets:precompile
+RUN bundle exec rails assets:precompile
 # Configure MySQL
 
 # Then update the config/database.yml file to point to the MySQL user account and database you created above.
