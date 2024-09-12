@@ -68,7 +68,7 @@ RUN bundle exec rails assets:precompile
 # Finally, start the application
 
 EXPOSE 3000
-# VOLUME /data
+COPY production.rb /home/fromthepage/config/environments/
 COPY database.yml /home/fromthepage/config/database.yml
 COPY 01fromthepage.rb secret_token.rb devise.rb /home/fromthepage/config/initializers/
 COPY fromthepage.sh /home/fromthepage/fromthepage.sh
