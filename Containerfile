@@ -72,4 +72,5 @@ COPY production.rb /home/fromthepage/config/environments/
 COPY database.yml /home/fromthepage/config/database.yml
 COPY 01fromthepage.rb secret_token.rb devise.rb /home/fromthepage/config/initializers/
 COPY fromthepage.sh /home/fromthepage/fromthepage.sh
+VOLUME ["/home/fromthepage/config", "/home/fromthepage/log", "/home/fromthepage/public/images/working", "/home/fromthepage/public/uploads", "/home/fromthepage/tmp", "/home/fromthepage/public/images/uploaded", "/home/fromthepage/public/text"]
 CMD ["./fromthepage.sh"]
