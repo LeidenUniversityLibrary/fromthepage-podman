@@ -35,7 +35,9 @@ ARG FTP_VERSION=development
 
 # Clone the repository
 ADD ${REPO}#${FTP_VERSION} /fromthepage
-RUN cd /fromthepage && rm -rf test_data spec
+RUN cd /fromthepage && rm -rf test_data spec && sed -i -e 's/^ruby.*$//' Gemfile
+# Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
+# RUN sed -i -e 's/^ruby.*$//' Gemfile
 
 FROM ruby27
 ARG BUNDLER_VERSION=2.4.22
@@ -54,8 +56,6 @@ RUN gem install bundler -v ${BUNDLER_VERSION}
 # RUN gem install capybara-webkit -v '1.15.1'
 # RUN cd fromthepage; bundle install; bundle add sqlite3 -v 1.6.9
 
-# Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
-RUN sed -i -e 's/^ruby.*$//' Gemfile
 ENV RAILS_ENV=production
 # All gems are loaded on application startup, so we need to install them all
 # ENV BUNDLE_WITHOUT=development:test
