@@ -56,11 +56,13 @@ RUN gem install bundler -v ${BUNDLER_VERSION}
 # RUN gem install capybara-webkit -v '1.15.1'
 # RUN cd fromthepage; bundle install; bundle add sqlite3 -v 1.6.9
 
-ENV RAILS_ENV=production
 # All gems are loaded on application startup, so we need to install them all
 # ENV BUNDLE_WITHOUT=development:test
 RUN bundle install
 # RUN bundle config set --local deployment 'true' && bundle install
+ARG RAILS_ENV
+ENV RAILS_ENV=${RAILS_ENV:-production}
+ENV FTP_DEVISE_STRETCHES=10
 RUN bundle exec rails assets:precompile
 # Configure MySQL
 
