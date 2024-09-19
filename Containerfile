@@ -12,6 +12,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     imagemagick libmagickwand-dev \
     graphviz tzdata \
+    ghostscript \
+    pandoc \
+    texlive-xetex \
+    poppler-utils \
     build-essential && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       $(apt-get -s build-dep ruby-rmagick | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v 'ruby') && \
