@@ -83,13 +83,16 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-  Rails.application.routes.default_url_options[:host] = 'fromthepage.com'
-  config.action_mailer.default_url_options = { host: 'fromthepage.com' }
-  config.action_mailer.default_options = { from: SENDING_EMAIL_ADDRESS }
-  config.action_mailer.delivery_method = :postmark
+  Rails.application.routes.default_url_options[:host] = ENV['FTP_HOSTNAME']
+  config.action_mailer.default_url_options = { host: ENV['FTP_HOSTNAME'] }
+  config.action_mailer.default_options = { from: ENV['FTP_SENDING_EMAIL_ADDRESS'] }
+  config.action_mailer.delivery_method = :smtp
 
-  config.action_mailer.postmark_settings = {
-    api_token: ''
+  config.action_mailer.smtp_settings = {
+    address: ENV['SMTP_HOST'],
+    port:    ENV['SMTP_PORT'],
+    domain:  ENV['FTP_HOSTNAME'],
+    # other parameters include :user, :password, :authentication
   }
 
   Ahoy.geocode = false
