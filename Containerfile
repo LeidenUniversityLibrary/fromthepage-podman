@@ -60,7 +60,7 @@ RUN gem install bundler -v ${BUNDLER_VERSION}
 
 # All gems are loaded on application startup, so we need to install them all
 # ENV BUNDLE_WITHOUT=development:test
-RUN bundle install
+RUN bundle install --jobs 3
 # RUN bundle config set --local deployment 'true' && bundle install
 
 # ------------------
