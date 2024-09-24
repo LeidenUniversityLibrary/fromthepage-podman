@@ -29,6 +29,7 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
+# --------------------
 FROM busybox AS src
 ARG REPO=https://github.com/benwbrum/fromthepage.git
 ARG FTP_VERSION=development
@@ -39,7 +40,8 @@ RUN cd /fromthepage && rm -rf test_data spec && sed -i -e 's/^ruby.*$//' Gemfile
 # Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
 # RUN sed -i -e 's/^ruby.*$//' Gemfile
 
-FROM ruby27
+# --------------------
+FROM ruby27 AS builder
 ARG BUNDLER_VERSION=2.4.22
 # WORKDIR /home
 WORKDIR /home/fromthepage
@@ -60,9 +62,16 @@ RUN gem install bundler -v ${BUNDLER_VERSION}
 # ENV BUNDLE_WITHOUT=development:test
 RUN bundle install
 # RUN bundle config set --local deployment 'true' && bundle install
+
+# ------------------
+FROM builder AS production
 ARG RAILS_ENV
 ENV RAILS_ENV=${RAILS_ENV:-production}
 ENV FTP_DEVISE_STRETCHES=10
+COPY production.rb /home/fromthepage/config/environments/
+COPY database.yml /home/fromthepage/config/database.yml
+COPY 01fromthepage.rb secret_token.rb devise.rb /home/fromthepage/config/initializers/
+COPY fromthepage.sh /home/fromthepage/fromthepage.sh
 RUN bundle exec rails assets:precompile
 # Configure MySQL
 
@@ -74,9 +83,5 @@ RUN bundle exec rails assets:precompile
 # Finally, start the application
 
 EXPOSE 3000
-COPY production.rb /home/fromthepage/config/environments/
-COPY database.yml /home/fromthepage/config/database.yml
-COPY 01fromthepage.rb secret_token.rb devise.rb /home/fromthepage/config/initializers/
-COPY fromthepage.sh /home/fromthepage/fromthepage.sh
 VOLUME ["/home/fromthepage/config", "/home/fromthepage/log", "/home/fromthepage/public/images/working", "/home/fromthepage/public/uploads", "/home/fromthepage/tmp", "/home/fromthepage/public/images/uploaded", "/home/fromthepage/public/text"]
 CMD ["./fromthepage.sh"]
