@@ -4,7 +4,7 @@ services:
     # build:
     #   dockerfile: Containerfile
     #   context: .
-    image: docker.io/bencomp/fromthepage:production
+    image: docker.io/bencomp/fromthepage:passenger
     platform: "linux/amd64"
     secrets:
     - db_host
