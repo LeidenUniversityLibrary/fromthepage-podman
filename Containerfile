@@ -15,6 +15,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     ghostscript \
     pandoc \
     texlive-xetex \
+    texlive-latex-base \
+    pdf2svg \
     poppler-utils \
     build-essential && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
