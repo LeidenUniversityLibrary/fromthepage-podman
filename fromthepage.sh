@@ -32,4 +32,4 @@ then
   export FTP_DEVISE_STRETCHES=$(cat /run/secrets/devise_stretches)
 fi
 
-bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0
+cd /home/app/fromthepage && /sbin/setuser app bundle exec rails db:prepare
