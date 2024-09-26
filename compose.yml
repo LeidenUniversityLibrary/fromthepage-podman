@@ -19,11 +19,11 @@ services:
     - path: ./local.env
       required: false
     environment:
-    - RAILS_ENV=development
+    - PASSENGER_APP_ENV=development
     depends_on:
     - "mysql"
     ports:
-    - "3000:3000"
+    - "3000:80"
     volumes:
       - fromthepage_config:/home/fromthepage/config
       - fromthepage_logs:/home/fromthepage/log
