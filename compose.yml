@@ -25,13 +25,13 @@ services:
     ports:
     - "3000:80"
     volumes:
-      - fromthepage_config:/home/fromthepage/config
-      - fromthepage_logs:/home/fromthepage/log
-      - fromthepage_tmp:/home/fromthepage/tmp
-      - fromthepage_public_images_working:/home/fromthepage/public/images/working
-      - fromthepage_public_images_uploaded:/home/fromthepage/public/images/uploaded
-      - fromthepage_public_uploads:/home/fromthepage/public/uploads
-      - fromthepage_public_text:/home/fromthepage/public/text
+      - fromthepage_config:/home/app/fromthepage/config
+      - fromthepage_logs:/home/app/fromthepage/log
+      - fromthepage_tmp:/home/app/fromthepage/tmp
+      - fromthepage_public_images_working:/home/app/fromthepage/public/images/working
+      - fromthepage_public_images_uploaded:/home/app/fromthepage/public/images/uploaded
+      - fromthepage_public_uploads:/home/app/fromthepage/public/uploads
+      - fromthepage_public_text:/home/app/fromthepage/public/text
     # restart: always
 
   mysql:
