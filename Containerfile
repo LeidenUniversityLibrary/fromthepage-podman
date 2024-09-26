@@ -40,36 +40,31 @@ WORKDIR /fromthepage
 COPY production.rb /fromthepage/config/environments/
 COPY database.yml /fromthepage/config/database.yml
 COPY 01fromthepage.rb secret_token.rb devise.rb /fromthepage/config/initializers/
-RUN rm -rf test_data spec && sed -i -e 's/^ruby.*$//' Gemfile
 # Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
-# RUN sed -i -e 's/^ruby.*$//' Gemfile
+RUN rm -rf test_data spec && sed -i -e 's/^ruby.*$//' Gemfile
 
 # --------------------
 FROM ruby27 AS builder
 ARG BUNDLER_VERSION=2.4.22
-# WORKDIR /home
+
 USER app
 WORKDIR /home/app
 COPY --from=src --chown=app:app /fromthepage /home/app/fromthepage
 WORKDIR /home/app/fromthepage
-RUN ls -la /home/app/fromthepage
-# Install required gems
-#    bundle install
-RUN gem install bundler -v ${BUNDLER_VERSION}
-# RUN gem install nokogiri -v 1.15.5
-# RUN add-apt-repository ppa:rock-core/qt4
-# RUN apt update
-# RUN apt-get install -y qt4-default libqtwebkit4 libqtwebkit-dev
-# RUN apt-get install libqtwebkit4 -y
-# RUN apt-get install libqtwebkit-dev -y
-# RUN gem install capybara-webkit -v '1.15.1'
-# RUN cd fromthepage; bundle install; bundle add sqlite3 -v 1.6.9
 
+RUN gem install bundler -v ${BUNDLER_VERSION}
+
+# Install required gems
 # All gems are loaded on application startup, so we need to install them all
+# See https://github.com/benwbrum/fromthepage/issues/4316
+# and https://github.com/benwbrum/fromthepage/issues/4291
 # ENV BUNDLE_WITHOUT=development:test
-RUN bundle install --jobs 3
+
+# At some point we may want to use a separate build stage to install the gems,
+# precompile the assets and then copy them to a leaner image to run.
+# By setting the `deployment` flag, bundler install the gems within the app directory.
 # RUN bundle config set --local deployment 'true' && bundle install
-ENV FTP_DEVISE_STRETCHES=10
+RUN bundle install --jobs 3
 RUN bundle exec rails assets:precompile
 
 # ------------------
@@ -85,15 +80,7 @@ ADD nginx-fromthepage.conf /etc/nginx/sites-enabled/fromthepage.conf
 # Add init script
 RUN mkdir -p /etc/my_init.d
 COPY fromthepage.sh /etc/my_init.d/
-# Configure MySQL
 
-# Then update the config/database.yml file to point to the MySQL user account and database you created above.
-# Run
-#    rake db:migrate
-# to load the schema definition into the database account.
-
-# Finally, start the application
-
-# EXPOSE 3000
-VOLUME ["/home/fromthepage/config", "/home/fromthepage/log", "/home/fromthepage/public/images/working", "/home/fromthepage/public/uploads", "/home/fromthepage/tmp", "/home/fromthepage/public/images/uploaded", "/home/fromthepage/public/text"]
+# VOLUME ["/home/fromthepage/config", "/home/fromthepage/log", "/home/fromthepage/public/images/working", "/home/fromthepage/public/uploads", "/home/fromthepage/tmp", "/home/fromthepage/public/images/uploaded", "/home/fromthepage/public/text"]
+# This command starts our services.
 CMD ["/sbin/my_init"]
