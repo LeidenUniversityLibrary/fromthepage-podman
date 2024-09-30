@@ -1,10 +1,13 @@
-FROM docker.io/phusion/passenger-ruby27 AS ruby27
-
-LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
-
+FROM docker.io/phusion/passenger-ruby27 AS ruby27-base
 # Update packages from base image
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
+    apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade && \
+    DEBIAN_FRONTEND=noninteractive apt clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/*
+
+FROM ruby27-base AS ruby27
+LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
+
 # Install the Ubuntu packages.
 # Install Ruby, RubyGems, Bundler, ImageMagick, MySQL and Git
 # Install qt4/qtwebkit libraries for capybara
