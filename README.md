@@ -27,7 +27,8 @@ the database connection information from environment variables.
 In fromthepage.sh these variables are populated from Docker/Podman secrets.
 Add the database connection information to the files in `./secrets`:
 
-- `./secrets/db_host.txt`: MySQL hostname
+- `./secrets/db_host.txt`: MySQL hostname (use `host.containers.internal` to 
+  refer to the host running podman)
 - `./secrets/db_name.txt`: MySQL database name
 - `./secrets/db_user.txt`: MySQL username
 - `./secrets/db_password.txt`: MySQL password
