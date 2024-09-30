@@ -1,8 +1,10 @@
-ARG VARIANT=2.7
 FROM docker.io/phusion/passenger-ruby27 AS ruby27
-# FROM mcr.microsoft.com/devcontainers/ruby:${VARIANT} AS ruby27
+
 LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
 
+# Update packages from base image
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 # Install the Ubuntu packages.
 # Install Ruby, RubyGems, Bundler, ImageMagick, MySQL and Git
 # Install qt4/qtwebkit libraries for capybara
