@@ -42,6 +42,7 @@ WORKDIR /fromthepage
 COPY production.rb /fromthepage/config/environments/
 COPY database.yml /fromthepage/config/database.yml
 COPY 01fromthepage.rb secret_token.rb devise.rb /fromthepage/config/initializers/
+COPY load-secrets-to-env.sh /fromthepage/
 # Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
 RUN rm -rf test_data spec && sed -i -e 's/^ruby.*$//' Gemfile
 
@@ -81,7 +82,7 @@ ADD fromthepage-env.conf /etc/nginx/main.d/fromthepage-env.conf
 ADD nginx-fromthepage.conf /etc/nginx/sites-enabled/fromthepage.conf
 # Add init script
 RUN mkdir -p /etc/my_init.d
-COPY fromthepage.sh /etc/my_init.d/
+COPY app_01-load-secrets-to-nginx-conf.sh app_10-fromthepage.sh /etc/my_init.d/
 
 # VOLUME ["/home/fromthepage/config", "/home/fromthepage/log", "/home/fromthepage/public/images/working", "/home/fromthepage/public/uploads", "/home/fromthepage/tmp", "/home/fromthepage/public/images/uploaded", "/home/fromthepage/public/text"]
 # This command starts our services.
