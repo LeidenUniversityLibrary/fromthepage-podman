@@ -28,7 +28,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
       $(apt-get -s build-dep ruby-rmagick | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v 'ruby') && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
       $(apt-get -s build-dep ruby-mysql2 | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v -e 'mysql-' -e 'ruby') && \
-    DEBIAN_FRONTEND=noninteractive apt clean
+    DEBIAN_FRONTEND=noninteractive apt clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/*
 
 # Set the locale.
 RUN locale-gen en_US.UTF-8
