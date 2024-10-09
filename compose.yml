@@ -6,18 +6,7 @@ services:
     #   context: .
     image: docker.io/bencomp/fromthepage:passenger
     platform: "linux/amd64"
-    secrets:
-    - db_host
-    - db_name
-    - db_user
-    - db_password
-    - app_secret_key_base
-    - devise_secret_key
-    - devise_pepper
-    - devise_stretches
-    env_file:
-    - path: ./local.env
-      required: false
+    env_file: ./local.env
     environment:
     - PASSENGER_APP_ENV=development
     depends_on:
@@ -39,13 +28,9 @@ services:
     platform: "linux/amd64"
     environment:
     - MYSQL_RANDOM_ROOT_PASSWORD=yes
-    - MYSQL_USER_FILE=/run/secrets/db_user
-    - MYSQL_PASSWORD_FILE=/run/secrets/db_password
-    - MYSQL_DATABASE_FILE=/run/secrets/db_name
-    secrets:
-    - db_name
-    - db_user
-    - db_password
+    - MYSQL_USER=fromthepage
+    - MYSQL_PASSWORD=fromthepage
+    - MYSQL_DATABASE=fromthepage
     volumes:
     - fromthepage_mysql_data:/var/lib/mysql
     - ./data:/docker-entrypoint-initdb.d
@@ -60,21 +45,3 @@ volumes:
   fromthepage_public_images_uploaded:
   fromthepage_public_uploads:
   fromthepage_public_text:
-
-secrets:
-  db_host:
-    file: ./secrets/db_host.txt
-  db_name:
-    file: ./secrets/db_name.txt
-  db_user:
-    file: ./secrets/db_user.txt
-  db_password:
-    file: ./secrets/db_password.txt
-  app_secret_key_base:
-    file: ./secrets/app_secret_key_base.txt
-  devise_secret_key:
-    file: ./secrets/devise_secret_key.txt
-  devise_pepper:
-    file: ./secrets/devise_pepper.txt
-  devise_stretches:
-    file: ./secrets/devise_stretches.txt
