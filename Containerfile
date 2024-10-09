@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM docker.io/phusion/passenger-ruby27 AS ruby27-base
 # Update packages from base image
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
