@@ -86,6 +86,7 @@ USER root
 RUN rm -f /etc/service/nginx/down /etc/nginx/sites-enabled/default
 ADD fromthepage-env.conf /etc/nginx/main.d/fromthepage-env.conf
 ADD nginx-fromthepage.conf /etc/nginx/sites-enabled/fromthepage.conf
+ADD fromthepage-stats.sh /etc/cron.daily/fromthepage-stats
 # Add init script
 RUN mkdir -p /etc/my_init.d
 COPY app_01-load-secrets-to-nginx-conf.sh app_10-fromthepage.sh /etc/my_init.d/
