@@ -38,3 +38,10 @@ You can put your data in the `data/` directory.
 After loading the existing data, start the FromThePage container.
 Depending on the version you are coming from and the size of your database,
 running migrations may take a while.
+
+### Reverse proxy
+
+If you run this application behind a reverse proxy, make sure that the proxy
+sets the request header `X-Forwarded-Proto: https`, so that the application
+understands that the request was made using HTTPS.
+It is important that `https` is in lowercase.
