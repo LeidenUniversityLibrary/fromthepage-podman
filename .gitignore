@@ -1,0 +1,5 @@
+*.sql.gz
+.DS_Store
+*.env
+*.env.*
+!*.env.template

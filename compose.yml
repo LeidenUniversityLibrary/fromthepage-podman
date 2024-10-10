@@ -1,0 +1,46 @@
+services:
+  fromthepage:
+    # build:
+    #   dockerfile: Containerfile
+    #   context: .
+    image: docker.io/bencomp/fromthepage-passenger:latest
+    platform: "linux/amd64"
+    env_file: ./local.env
+    environment:
+    - PASSENGER_APP_ENV=development
+    depends_on:
+    - "mysql"
+    ports:
+    - "3000:80"
+    volumes:
+      - fromthepage_config:/home/app/fromthepage/config
+      - fromthepage_logs:/home/app/fromthepage/log
+      - fromthepage_tmp:/home/app/fromthepage/tmp
+      - fromthepage_public_images_working:/home/app/fromthepage/public/images/working
+      - fromthepage_public_images_uploaded:/home/app/fromthepage/public/images/uploaded
+      - fromthepage_public_uploads:/home/app/fromthepage/public/uploads
+      - fromthepage_public_text:/home/app/fromthepage/public/text
+    # restart: always
+
+  mysql:
+    image: mysql:5.7
+    platform: "linux/amd64"
+    environment:
+    - MYSQL_RANDOM_ROOT_PASSWORD=yes
+    - MYSQL_USER=fromthepage
+    - MYSQL_PASSWORD=fromthepage
+    - MYSQL_DATABASE=fromthepage
+    volumes:
+    - fromthepage_mysql_data:/var/lib/mysql
+    - ./data:/docker-entrypoint-initdb.d
+    restart: always
+
+volumes:
+  fromthepage_mysql_data:
+  fromthepage_config:
+  fromthepage_logs:
+  fromthepage_tmp:
+  fromthepage_public_images_working:
+  fromthepage_public_images_uploaded:
+  fromthepage_public_uploads:
+  fromthepage_public_text:
