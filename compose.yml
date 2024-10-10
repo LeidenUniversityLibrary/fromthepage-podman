@@ -3,7 +3,7 @@ services:
     # build:
     #   dockerfile: Containerfile
     #   context: .
-    image: docker.io/bencomp/fromthepage:passenger
+    image: docker.io/bencomp/fromthepage-passenger:latest
     platform: "linux/amd64"
     env_file: ./local.env
     environment:

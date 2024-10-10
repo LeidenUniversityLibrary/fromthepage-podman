@@ -38,8 +38,8 @@ jobs:
           file: Containerfile
           push: true
           tags: |
-            docker.io/bencomp/fromthepage:latest
-            docker.io/bencomp/fromthepage:${{ github.ref_name }}
+            docker.io/bencomp/fromthepage-passenger:latest
+            docker.io/bencomp/fromthepage-passenger:${{ github.ref_name }}
 
       - name: Log out from Docker Hub
         run: docker logout
