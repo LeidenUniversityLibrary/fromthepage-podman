@@ -8,6 +8,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 
 FROM ruby27-base AS ruby27
 LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
+LABEL org.opencontainers.image.source="https://github.com/LeidenUniversityLibrary/fromthepage-podman"
 
 # Install the Ubuntu packages.
 # Install Ruby, RubyGems, Bundler, ImageMagick, MySQL and Git
