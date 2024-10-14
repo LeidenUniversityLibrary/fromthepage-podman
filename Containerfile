@@ -53,6 +53,7 @@ COPY 01fromthepage.rb secret_token.rb devise.rb /fromthepage/config/initializers
 COPY load-secrets-to-env.sh /fromthepage/
 # Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
 RUN rm -rf test_data spec && sed -i -e 's/^ruby.*$//' Gemfile
+RUN sed -i -E '/newrelic/d' Gemfile && sed -i -E '/newrelic/d' Gemfile.lock
 
 # --------------------
 FROM ruby27 AS builder
