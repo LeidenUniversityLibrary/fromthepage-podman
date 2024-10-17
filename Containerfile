@@ -61,10 +61,10 @@ ARG BUNDLER_VERSION=2.4.22
 
 USER app
 WORKDIR /home/app
+RUN gem install bundler -v ${BUNDLER_VERSION}
 COPY --from=src --chown=app:app /fromthepage /home/app/fromthepage
 WORKDIR /home/app/fromthepage
 
-RUN gem install bundler -v ${BUNDLER_VERSION}
 
 # Install required gems
 # All gems are loaded on application startup, so we need to install them all
