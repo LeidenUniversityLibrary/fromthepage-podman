@@ -12,8 +12,8 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
-ENV RAILS_ENV="production" \
-    BUNDLE_DEPLOYMENT="1"
+ENV RAILS_ENV="production"
+ENV BUNDLE_PATH=/home/app/fromthepage/vendor/bundle
 
 # --------------------
 FROM busybox AS src
@@ -28,8 +28,9 @@ COPY database.yml /fromthepage/config/database.yml
 COPY 01fromthepage.rb secret_token.rb devise.rb /fromthepage/config/initializers/
 COPY load-secrets-to-env.sh /fromthepage/
 # Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
-RUN rm -rf test_data spec && sed -i -e 's/^ruby.*$//' Gemfile
-RUN sed -i -E '/newrelic/d' Gemfile && sed -i -E '/newrelic/d' Gemfile.lock
+RUN rm -rf test_data spec .github .git .settings .autocode .devcontainer
+RUN sed -i -e 's/^ruby.*$//' Gemfile
+RUN sed -i -E -e '/newrelic/d' -e '/capistrano/d' -e '/puma/d' Gemfile 
 
 # --------------------
 FROM ruby27-base AS build
@@ -63,13 +64,11 @@ WORKDIR /home/app/fromthepage
 # and https://github.com/benwbrum/fromthepage/issues/4291
 # ENV BUNDLE_WITHOUT=development:test
 
-# At some point we may want to use a separate build stage to install the gems,
-# precompile the assets and then copy them to a leaner image to run.
-# By setting the `deployment` flag, bundler install the gems within the app directory.
-# RUN bundle config set --local deployment 'true' && bundle install
-# RUN bundle lock
 RUN bundle install
-    # rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+RUN rm -rf ~/.bundle/ \
+    "${BUNDLE_PATH}"/ruby/*/cache \
+    "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git \
+    "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.github
 RUN ls ./vendor/bundle/ruby/2.7.0/gems && \
     du -h -d 3 .
 RUN bundle exec bootsnap precompile --gemfile
@@ -107,7 +106,7 @@ ADD fromthepage-stats.sh /etc/cron.daily/fromthepage-stats
 # Add init script
 RUN mkdir -p /etc/my_init.d
 COPY app_01-load-secrets-to-nginx-conf.sh app_10-fromthepage.sh /etc/my_init.d/
-ENV BUNDLE_PATH=/home/app/fromthepage/vendor/bundle
+
 # VOLUME ["/home/fromthepage/config", "/home/fromthepage/log", "/home/fromthepage/public/images/working", "/home/fromthepage/public/uploads", "/home/fromthepage/tmp", "/home/fromthepage/public/images/uploaded", "/home/fromthepage/public/text"]
 # This command starts our services.
 CMD ["/sbin/my_init"]
