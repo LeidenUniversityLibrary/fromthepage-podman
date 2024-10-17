@@ -6,41 +6,14 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/*
 
-FROM ruby27-base AS ruby27
-LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
-LABEL org.opencontainers.image.source="https://github.com/LeidenUniversityLibrary/fromthepage-podman"
-
 # Set the locale.
 RUN locale-gen en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
-# Install the Ubuntu packages.
-# Install Ruby, RubyGems, Bundler, ImageMagick, MySQL and Git
-# Install qt4/qtwebkit libraries for capybara
-# Install build deps for gems installed by bundler
-# RUN add-apt-repository 'deb http://archive.ubuntu.com/ubuntu focal universe'
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    imagemagick libmagickwand-dev \
-    graphviz tzdata \
-    ghostscript \
-    pandoc \
-    texlive-xetex \
-    texlive-latex-base \
-    # texlive-extra-utils \
-    texlive-fonts-recommended \
-    lmodern \
-    pdf2svg \
-    poppler-utils \
-    build-essential && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      $(apt-get -s build-dep ruby-rmagick | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v 'ruby') && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      $(apt-get -s build-dep ruby-mysql2 | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v -e 'mysql-' -e 'ruby') && \
-    DEBIAN_FRONTEND=noninteractive apt clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/*
+ENV RAILS_ENV="production" \
+    BUNDLE_DEPLOYMENT="1"
 
 # --------------------
 FROM busybox AS src
@@ -59,12 +32,27 @@ RUN rm -rf test_data spec && sed -i -e 's/^ruby.*$//' Gemfile
 RUN sed -i -E '/newrelic/d' Gemfile && sed -i -E '/newrelic/d' Gemfile.lock
 
 # --------------------
-FROM ruby27 AS builder
+FROM ruby27-base AS build
 ARG BUNDLER_VERSION=2.4.22
+ARG DEBIAN_FRONTEND=noninteractive
+LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
+LABEL org.opencontainers.image.source="https://github.com/LeidenUniversityLibrary/fromthepage-podman"
+
+# Install build deps for gems installed by bundler
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends \
+    imagemagick libmagickwand-dev \
+    $(apt-get -s build-dep ruby-rmagick | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v 'ruby') \
+    $(apt-get -s build-dep ruby-mysql2 | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v -e 'mysql-' -e 'ruby') && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/*
+
+# Make yarn available
+RUN corepack enable
 
 USER app
 WORKDIR /home/app
-RUN gem install bundler -v ${BUNDLER_VERSION}
+# RUN gem install bundler -v ${BUNDLER_VERSION}
 COPY --from=src --chown=app:app /fromthepage /home/app/fromthepage
 WORKDIR /home/app/fromthepage
 
@@ -79,15 +67,38 @@ WORKDIR /home/app/fromthepage
 # precompile the assets and then copy them to a leaner image to run.
 # By setting the `deployment` flag, bundler install the gems within the app directory.
 # RUN bundle config set --local deployment 'true' && bundle install
-RUN bundle install --jobs 3
+# RUN bundle lock
+RUN bundle install
+    # rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+RUN ls ./vendor/bundle/ruby/2.7.0/gems && \
+    du -h -d 3 .
+RUN bundle exec bootsnap precompile --gemfile
+# Precompile bootsnap code for faster boot times
+RUN bundle exec bootsnap precompile app/ lib/
 RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 
 # ------------------
-FROM builder AS production
-ARG RAILS_ENV
-ENV RAILS_ENV=${RAILS_ENV:-production}
+FROM ruby27-base AS production
 
-USER root
+RUN apt-get update -qq && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    imagemagick libmagickwand-dev \
+    graphviz tzdata \
+    ghostscript \
+    pandoc \
+    texlive-xetex \
+    texlive-latex-base \
+    # texlive-extra-utils \
+    texlive-fonts-recommended \
+    lmodern \
+    pdf2svg \
+    poppler-utils \
+    $(apt-get -s build-dep ruby-rmagick | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v 'ruby') \
+    $(apt-get -s build-dep ruby-mysql2 | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v -e 'mysql-' -e 'ruby') && \
+    DEBIAN_FRONTEND=noninteractive apt clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/*
+
+COPY --from=build --chown=app:app /home/app/fromthepage /home/app/fromthepage
 # Load nginx configuration
 RUN rm -f /etc/service/nginx/down /etc/nginx/sites-enabled/default
 ADD fromthepage-env.conf /etc/nginx/main.d/fromthepage-env.conf
@@ -96,7 +107,7 @@ ADD fromthepage-stats.sh /etc/cron.daily/fromthepage-stats
 # Add init script
 RUN mkdir -p /etc/my_init.d
 COPY app_01-load-secrets-to-nginx-conf.sh app_10-fromthepage.sh /etc/my_init.d/
-
+ENV BUNDLE_PATH=/home/app/fromthepage/vendor/bundle
 # VOLUME ["/home/fromthepage/config", "/home/fromthepage/log", "/home/fromthepage/public/images/working", "/home/fromthepage/public/uploads", "/home/fromthepage/tmp", "/home/fromthepage/public/images/uploaded", "/home/fromthepage/public/text"]
 # This command starts our services.
 CMD ["/sbin/my_init"]
