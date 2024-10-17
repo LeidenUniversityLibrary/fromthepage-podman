@@ -10,6 +10,12 @@ FROM ruby27-base AS ruby27
 LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
 LABEL org.opencontainers.image.source="https://github.com/LeidenUniversityLibrary/fromthepage-podman"
 
+# Set the locale.
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
 # Install the Ubuntu packages.
 # Install Ruby, RubyGems, Bundler, ImageMagick, MySQL and Git
 # Install qt4/qtwebkit libraries for capybara
@@ -32,12 +38,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
       $(apt-get -s build-dep ruby-mysql2 | grep '^(Inst|Conf) ' | cut -d' ' -f2 | fgrep -v -e 'mysql-' -e 'ruby') && \
     DEBIAN_FRONTEND=noninteractive apt clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/*
-
-# Set the locale.
-RUN locale-gen en_US.UTF-8
-ENV LANG=en_US.UTF-8
-ENV LANGUAGE=en_US:en
-ENV LC_ALL=en_US.UTF-8
 
 # --------------------
 FROM busybox AS src
