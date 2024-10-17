@@ -77,7 +77,7 @@ WORKDIR /home/app/fromthepage
 # By setting the `deployment` flag, bundler install the gems within the app directory.
 # RUN bundle config set --local deployment 'true' && bundle install
 RUN bundle install --jobs 3
-RUN bundle exec rails assets:precompile
+RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 
 # ------------------
 FROM builder AS production
