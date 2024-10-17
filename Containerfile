@@ -29,6 +29,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     pandoc \
     texlive-xetex \
     texlive-latex-base \
+    # texlive-extra-utils \
+    texlive-fonts-recommended \
+    lmodern \
     pdf2svg \
     poppler-utils \
     build-essential && \
