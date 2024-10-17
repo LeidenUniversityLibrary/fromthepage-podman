@@ -25,6 +25,7 @@ ADD ${REPO}#${FTP_VERSION} /fromthepage
 WORKDIR /fromthepage
 COPY production.rb /fromthepage/config/environments/
 COPY database.yml /fromthepage/config/database.yml
+COPY routes.rb /fromthepage/config/routes.rb
 COPY 01fromthepage.rb secret_token.rb devise.rb /fromthepage/config/initializers/
 COPY load-secrets-to-env.sh /fromthepage/
 # Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
