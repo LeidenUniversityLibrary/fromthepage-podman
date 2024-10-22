@@ -25,12 +25,14 @@ ADD ${REPO}#${FTP_VERSION} /fromthepage
 WORKDIR /fromthepage
 COPY production.rb /fromthepage/config/environments/
 COPY database.yml /fromthepage/config/database.yml
+RUN --mount=type=bind,source=fix-routes.txt,target=/fromthepage/fix-routes.txt \
+    sed -E -f /fromthepage/fix-routes.txt -i"" /fromthepage/config/routes.rb
 COPY 01fromthepage.rb secret_token.rb devise.rb /fromthepage/config/initializers/
 COPY load-secrets-to-env.sh /fromthepage/
 # Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
 RUN rm -rf test_data spec .github .git .settings .autocode .devcontainer
-RUN sed -i -e 's/^ruby.*$//' Gemfile
-RUN sed -i -E -e '/newrelic/d' -e '/capistrano/d' -e '/puma/d' Gemfile 
+RUN sed -i"" -e 's/^ruby.*$//' Gemfile
+RUN sed -i"" -E -e '/newrelic/d' -e '/capistrano/d' -e '/puma/d' Gemfile 
 
 # --------------------
 FROM ruby27-base AS build

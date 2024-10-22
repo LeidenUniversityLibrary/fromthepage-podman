@@ -1,0 +1,19 @@
+# sed script to update routes.rb
+
+# Fix the root route
+/root to:/ s|redirect('/landing')|'static#splash'|
+/get '\/landing'/ s|'static#landing_page'|'static#splash'|
+
+# Remove "vanity URLs" for specific collections
+/:collection_id =>/d
+
+# Remove routes for success stories
+/static#at/d
+/static#natsstory/d
+/static#meredithsstory/d
+
+# Maybe remove more success stories; these could be linked in the footer
+# /static#transcription_archives/d
+# /static#public_libraries/d
+# /static#digital_scholarship/d
+# /static#state_archives/d
