@@ -100,6 +100,7 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/*
 
 COPY --from=build --chown=app:app /home/app/fromthepage /home/app/fromthepage
+USER root
 # Load nginx configuration
 RUN rm -f /etc/service/nginx/down /etc/nginx/sites-enabled/default
 ADD fromthepage-env.conf /etc/nginx/main.d/fromthepage-env.conf
