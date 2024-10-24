@@ -90,7 +90,7 @@ Rails.application.configure do
 
   config.action_mailer.smtp_settings = {
     address: ENV['SMTP_HOST'],
-    port:    ENV['SMTP_PORT'],
+    port:    ENV['SMTP_PORT'].to_i,
     domain:  ENV['FTP_HOSTNAME'],
     # other parameters include :user, :password, :authentication
   }
