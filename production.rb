@@ -89,9 +89,10 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
 
   config.action_mailer.smtp_settings = {
-    address: ENV['SMTP_HOST'],
-    port:    Integer(ENV.fetch('SMTP_PORT', '25'), 10),
-    domain:  ENV['FTP_HOSTNAME'],
+    address:          ENV['SMTP_HOST'],
+    port:             Integer(ENV.fetch('SMTP_PORT', '25'), 10),
+    domain:           ENV['FTP_HOSTNAME'],
+    enable_starttls:  false,
     # other parameters include :user, :password, :authentication
   }
 
