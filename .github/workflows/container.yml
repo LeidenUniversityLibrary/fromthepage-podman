@@ -38,8 +38,8 @@ jobs:
           file: Containerfile
           push: true
           tags: |
-            docker.io/squedwards/fromthepage-passenger:latest
-            docker.io/squedwards/fromthepage-passenger:${{ github.ref_name }}
+            ${{ secrets.CONTAINER_REPO }}:latest
+            ${{ secrets.CONTAINER_REPO }}:${{ github.ref_name }}
 
       - name: Log out from Docker Hub
         run: docker logout
