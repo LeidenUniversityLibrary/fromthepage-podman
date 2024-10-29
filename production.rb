@@ -92,7 +92,7 @@ Rails.application.configure do
     address:          ENV['SMTP_HOST'],
     port:             Integer(ENV.fetch('SMTP_PORT', '25'), 10),
     domain:           ENV['FTP_HOSTNAME'],
-    enable_starttls:  false,
+    enable_starttls: unless ENV['SMTP_DISABLE_STARTTLS'] then true else false end,
     # other parameters include :user, :password, :authentication
   }
 
