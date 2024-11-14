@@ -38,8 +38,6 @@ RUN sed -i"" -E -e '/newrelic/d' -e '/capistrano/d' -e '/puma/d' Gemfile
 FROM ruby27-base AS build
 ARG BUNDLER_VERSION=2.4.22
 ARG DEBIAN_FRONTEND=noninteractive
-LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
-LABEL org.opencontainers.image.source="https://github.com/LeidenUniversityLibrary/fromthepage-podman"
 
 # Install build deps for gems installed by bundler
 RUN apt-get update -qq && \
@@ -80,6 +78,8 @@ RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 
 # ------------------
 FROM ruby27-base AS production
+LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
+LABEL org.opencontainers.image.source="https://github.com/LeidenUniversityLibrary/fromthepage-podman"
 
 RUN apt-get update -qq && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
