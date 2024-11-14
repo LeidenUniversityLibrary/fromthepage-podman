@@ -23,6 +23,7 @@ ARG FTP_VERSION=development
 # Clone the repository
 ADD ${REPO}#${FTP_VERSION} /fromthepage
 WORKDIR /fromthepage
+RUN echo "${FTP_VERSION}" > revision.txt
 COPY production.rb /fromthepage/config/environments/
 COPY database.yml /fromthepage/config/database.yml
 RUN --mount=type=bind,source=fix-routes.txt,target=/fromthepage/fix-routes.txt \
