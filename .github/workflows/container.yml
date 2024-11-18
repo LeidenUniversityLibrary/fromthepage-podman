@@ -5,9 +5,8 @@ on:
     types: [published]
   push:
     tags:
-      - '*'
+      - 'v*'
     branches:
-      - 'actions*'
       - 'main'
 
 concurrency:
