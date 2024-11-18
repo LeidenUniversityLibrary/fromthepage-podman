@@ -23,6 +23,7 @@ ARG FTP_VERSION=development
 # Clone the repository
 ADD ${REPO}#${FTP_VERSION} /fromthepage
 WORKDIR /fromthepage
+RUN echo "${FTP_VERSION}" > revision.txt
 COPY production.rb /fromthepage/config/environments/
 COPY database.yml /fromthepage/config/database.yml
 RUN --mount=type=bind,source=fix-routes.txt,target=/fromthepage/fix-routes.txt \
@@ -40,8 +41,6 @@ RUN echo "gem 'ffi', '< 1.17'" >> Gemfile
 FROM ruby27-base AS build
 ARG BUNDLER_VERSION=2.4.22
 ARG DEBIAN_FRONTEND=noninteractive
-LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
-LABEL org.opencontainers.image.source="https://github.com/LeidenUniversityLibrary/fromthepage-podman"
 
 # Install build deps for gems installed by bundler
 RUN apt-get update -qq && \
@@ -83,6 +82,8 @@ RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 
 # ------------------
 FROM ruby27-base AS production
+LABEL org.opencontainers.image.authors="Ben Companjen <ben@companjen.name>"
+LABEL org.opencontainers.image.source="https://github.com/LeidenUniversityLibrary/fromthepage-podman"
 
 RUN apt-get update -qq && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
