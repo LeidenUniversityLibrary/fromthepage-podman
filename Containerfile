@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1-labs
 FROM docker.io/phusion/passenger-ruby27 AS ruby27-base
 # Update packages from base image
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
@@ -29,10 +29,12 @@ RUN --mount=type=bind,source=fix-routes.txt,target=/fromthepage/fix-routes.txt \
     sed -E -f /fromthepage/fix-routes.txt -i"" /fromthepage/config/routes.rb
 COPY 01fromthepage.rb secret_token.rb devise.rb /fromthepage/config/initializers/
 COPY load-secrets-to-env.sh /fromthepage/
-# Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
 RUN rm -rf test_data spec .github .git .settings .autocode .devcontainer
-RUN sed -i"" -e 's/^ruby.*$//' Gemfile
-RUN sed -i"" -E -e '/newrelic/d' -e '/capistrano/d' -e '/puma/d' Gemfile 
+# Remove the exact Ruby version, so that Ruby 2.7.8 is acceptable to bundler
+RUN sed -i"" -e "s/^ruby.*$//" Gemfile
+# RUN echo 2.7.8 > .ruby-version
+RUN sed -i"" -E -e '/newrelic/d' -e '/capistrano/d' -e '/puma/d' Gemfile
+RUN echo "gem 'ffi', '< 1.17'" >> Gemfile
 
 # --------------------
 FROM ruby27-base AS build
@@ -56,7 +58,7 @@ RUN corepack enable
 USER app
 WORKDIR /home/app
 # RUN gem install bundler -v ${BUNDLER_VERSION}
-COPY --from=src --chown=app:app /fromthepage /home/app/fromthepage
+COPY --from=src --chown=app:app /fromthepage/Gemfile /home/app/fromthepage/Gemfile
 WORKDIR /home/app/fromthepage
 
 
@@ -75,6 +77,7 @@ RUN ls ./vendor/bundle/ruby/2.7.0/gems && \
     du -h -d 3 .
 RUN bundle exec bootsnap precompile --gemfile
 # Precompile bootsnap code for faster boot times
+COPY --from=src --chown=app:app --exclude=Gemfile* /fromthepage /home/app/fromthepage
 RUN bundle exec bootsnap precompile app/ lib/
 RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 
