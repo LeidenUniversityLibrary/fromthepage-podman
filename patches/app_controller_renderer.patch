@@ -1,0 +1,14 @@
+diff --git a/config/initializers/application_controller_renderer.rb b/config/initializers/application_controller_renderer.rb
+index 8c26c8a05..616328eed 100644
+--- a/config/initializers/application_controller_renderer.rb
++++ b/config/initializers/application_controller_renderer.rb
+@@ -2,7 +2,7 @@
+ 
+ ActiveSupport::Reloader.to_prepare do
+   ApplicationController.renderer.defaults.merge!(
+-	  http_host: 'fromthepage.com',
+-    https: false
++    http_host: ENV['FTP_HOSTNAME'],
++    https: Rails.env.production? ? Rails.application.config.force_ssl : true
+   )
+ end
