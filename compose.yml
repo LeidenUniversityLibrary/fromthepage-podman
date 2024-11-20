@@ -13,7 +13,6 @@ services:
     ports:
     - "3000:80"
     volumes:
-      - fromthepage_config:/home/app/fromthepage/config
       - fromthepage_logs:/home/app/fromthepage/log
       - fromthepage_tmp:/home/app/fromthepage/tmp
       - fromthepage_public_images_working:/home/app/fromthepage/public/images/working
@@ -37,7 +36,6 @@ services:
 
 volumes:
   fromthepage_mysql_data:
-  fromthepage_config:
   fromthepage_logs:
   fromthepage_tmp:
   fromthepage_public_images_working:
