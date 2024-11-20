@@ -1,7 +1,7 @@
 # sed script to update routes.rb
 
 # Fix the root route
-/root to:/ s|redirect('/landing')|'static#splash'|
+/root to:/ s|redirect\('/landing'\)|'static#splash'|
 /get '\/landing'/ s|'static#landing_page'|'static#splash'|
 
 # Remove "vanity URLs" for specific collections
