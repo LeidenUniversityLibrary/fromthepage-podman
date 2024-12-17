@@ -99,6 +99,10 @@ Rails.application.configure do
   Ahoy.geocode = false
   config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
 
+  if ENV['DISABLE_IP_SPOOFING_CHECK']
+    config.action_dispatch.ip_spoofing_check = false
+  end
+
   RAKE = '/usr/bin/env rake'
   NEATO = '/usr/bin/neato'
   TEX_PATH='/usr/bin/'
