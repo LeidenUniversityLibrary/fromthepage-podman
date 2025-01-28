@@ -38,6 +38,8 @@ RUN sed -i"" -E -e '/newrelic/d' -e '/capistrano/d' -e '/puma/d' Gemfile
 RUN echo "gem 'ffi', '< 1.17'" >> Gemfile
 RUN --mount=type=bind,source=patches/app_controller_renderer.patch,target=/fromthepage/app_controller_renderer.patch \
     patch /fromthepage/config/initializers/application_controller_renderer.rb /fromthepage/app_controller_renderer.patch
+RUN --mount=type=bind,source=patches/owner_header.patch,target=/fromthepage/owner_header.patch \
+    patch /fromthepage/app/views/dashboard/_owner_header.html.slim /fromthepage/owner_header.patch
 
 # --------------------
 FROM ruby27-base AS build
