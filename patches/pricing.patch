@@ -1,0 +1,123 @@
+diff --git a/app/assets/stylesheets/sections/software.scss b/app/assets/stylesheets/sections/software.scss
+index 5124d016c..fe9615028 100644
+--- a/app/assets/stylesheets/sections/software.scss
++++ b/app/assets/stylesheets/sections/software.scss
+@@ -97,30 +97,6 @@
+     }
+   }
+ 
+-  #pricing {
+-    clear: both;
+-    margin-top: $gapSize * 3;
+-
+-    h2 { margin-bottom: $gapSize * 2; }
+-    h3 { text-align: center; }
+-
+-    ul.pricing_features {
+-      list-style: none;
+-      margin-left: 0;
+-
+-      li strong {
+-        font-weight: bold;
+-      }
+-    }
+-
+-    .pricing_grid_cell .pricing_price .pricing_price_billing {
+-      display: block;
+-      font-size: $fontSize;
+-      width: 100%;
+-      margin: 13px 0 $gapSize 0;
+-    }
+-  }
+-
+   #integrations {
+     section {
+       width: 33%;
+diff --git a/app/views/static/software.html.slim b/app/views/static/software.html.slim
+index 15c5f4725..67a8b396b 100644
+--- a/app/views/static/software.html.slim
++++ b/app/views/static/software.html.slim
+@@ -47,83 +47,6 @@
+     #video_wrapper
+       <iframe title="Get Started" width="560" height="315" src="https://www.youtube.com/embed/UcNXSY0q9uE?controls=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+ 
+-  section#pricing
+-    h2 FromThePage Pricing
+-
+-    .pricing
+-      .pricing_grid
+-        .pricing_grid_row
+-          .pricing_grid_cell
+-            h4.pricing_title Researcher
+-            ul.pricing_features
+-              li.pricing_feature Collaborative transcription, translation, OCR correction and subject indexing
+-              li.pricing_feature Multiple export formats (TEI, CSV, HTML, IIIF/Open Annotation)
+-              li.pricing_feature 1 project
+-              li.pricing_feature Unlimited documents
+-              li.pricing_feature Up to 10,000 pages
+-              li.pricing_feature E-mail support
+-              li.pricing_feature Your data will be available as read-only and can be exported if you cancel your subscription.
+-              li.pricing_feature Credit Card Required
+-          .pricing_grid_cell
+-            h4.pricing_title Small Organization
+-            ul.pricing_features
+-              li.pricing_feature Collaborative transcription, translation, OCR correction and subject indexing
+-              li.pricing_feature Multiple export formats (TEI, CSV, HTML, IIIF/Open Annotation)
+-              li.pricing_feature Unlimited projects
+-              li.pricing_feature Unlimited documents
+-              li.pricing_feature Up to 50,000 pages
+-              li.pricing_feature E-mail and chat support
+-              li.pricing_feature Phone consultation on new projects
+-              li.pricing_feature Your data will be available as read-only and can be exported if you cancel your subscription.
+-          .pricing_grid_cell
+-            h4.pricing_title Large Institution
+-            ul.pricing_features
+-              li.pricing_feature Collaborative transcription, translation, subject indexing, and OCR correction
+-              li.pricing_feature Multiple export formats (TEI, CSV, HTML, IIIF/Open Annotation)
+-              li.pricing_feature Unlimited projects
+-              li.pricing_feature Unlimited documents
+-              li.pricing_feature Up to 100,000 pages
+-              li.pricing_feature Contact us for pricing for additional pages
+-              li.pricing_feature E-mail and chat support
+-              li.pricing_feature Phone consultation on new projects and strategic consultation
+-              li.pricing_feature Your data will be available as read-only and can be exported if you cancel your subscription.
+-              li.pricing_feature
+-                strong PLUS
+-              li.pricing_feature Single Sign On
+-              li.pricing_feature On Demand Custom Reports
+-              li.pricing_feature IIIF Consulting
+-              li.pricing_feature Integration Consulting
+-        .pricing_grid_row
+-          .pricing_grid_cell
+-            .pricing_price
+-              span.pricing_price_value $100
+-              .pricing_price_billing per month, billed monthly or
+-              span.pricing_price_value $1200
+-              .pricing_price_billing per year, billed annually
+-          .pricing_grid_cell
+-            .pricing_price
+-              span.pricing_price_value $360
+-              .pricing_price_billing per month, billed monthly or 
+-              span.pricing_price_value $3600
+-              .pricing_price_billing per year, billed annually
+-          .pricing_grid_cell
+-            .pricing_price
+-              span.pricing_price_value $600
+-              .pricing_price_billing per month, billed monthly or 
+-              span.pricing_price_value $6000
+-              .pricing_price_billing per year, billed annually
+-
+-        .pricing_grid_row
+-          .pricing_grid_cell
+-            =link_to 'Start Free Trial', users_new_trial_path, class: 'button big'
+-          .pricing_grid_cell
+-            =link_to 'Start Free Trial', users_new_trial_path, class: 'button big'
+-          .pricing_grid_cell
+-            =link_to 'Start Free Trial', users_new_trial_path, class: 'button big'
+-
+-    h3 Ready to buy?  
+-    p #{link_to('Send us a note', contact_path(contact_form_token))} and we'll send you an invoice, payable either by credit card or by your organization's accounting department.  Need additional paperwork for a PO?  Just let us know.
+-
+   #integrations
+     h2 Integrations
+ 
