@@ -42,6 +42,8 @@ RUN --mount=type=bind,source=patches/owner_header.patch,target=/fromthepage/owne
     git apply /fromthepage/owner_header.patch
 RUN --mount=type=bind,source=patches/pricing.patch,target=/fromthepage/pricing.patch \
     git apply /fromthepage/pricing.patch
+RUN --mount=type=bind,source=patches/boot-logger.patch,target=/fromthepage/boot-logger.patch \
+    git apply /fromthepage/boot-logger.patch
 RUN rm app/views/static/pricing.html.slim
 
 # --------------------
