@@ -16,7 +16,7 @@ ENV RAILS_ENV="production"
 ENV BUNDLE_PATH=/home/app/fromthepage/vendor/bundle
 
 # --------------------
-FROM busybox AS src
+FROM bitnami/git AS src
 ARG REPO=https://github.com/benwbrum/fromthepage.git
 ARG FTP_VERSION=development
 
@@ -37,7 +37,14 @@ RUN sed -i"" -e "s/^ruby.*$//" Gemfile
 RUN sed -i"" -E -e '/newrelic/d' -e '/capistrano/d' -e '/puma/d' Gemfile
 RUN echo "gem 'ffi', '< 1.17'" >> Gemfile
 RUN --mount=type=bind,source=patches/app_controller_renderer.patch,target=/fromthepage/app_controller_renderer.patch \
-    patch /fromthepage/config/initializers/application_controller_renderer.rb /fromthepage/app_controller_renderer.patch
+    git apply /fromthepage/app_controller_renderer.patch
+RUN --mount=type=bind,source=patches/owner_header.patch,target=/fromthepage/owner_header.patch \
+    git apply /fromthepage/owner_header.patch
+RUN --mount=type=bind,source=patches/pricing.patch,target=/fromthepage/pricing.patch \
+    git apply /fromthepage/pricing.patch
+RUN --mount=type=bind,source=patches/boot-logger.patch,target=/fromthepage/boot-logger.patch \
+    git apply /fromthepage/boot-logger.patch
+RUN rm app/views/static/pricing.html.slim
 
 # --------------------
 FROM ruby27-base AS build

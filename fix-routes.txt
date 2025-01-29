@@ -7,6 +7,10 @@
 # Remove "vanity URLs" for specific collections
 /:collection_id =>/d
 
+# Remove routes for pricing and new trial
+/'pricing'/d
+/trial/d
+
 # Remove routes for success stories
 /static#at/d
 /static#natsstory/d
