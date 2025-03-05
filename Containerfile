@@ -44,7 +44,6 @@ RUN --mount=type=bind,source=patches/pricing.patch,target=/fromthepage/pricing.p
     git apply /fromthepage/pricing.patch
 RUN --mount=type=bind,source=patches/boot-logger.patch,target=/fromthepage/boot-logger.patch \
     git apply /fromthepage/boot-logger.patch
-RUN rm app/views/static/pricing.html.slim
 
 # --------------------
 FROM ruby27-base AS build
